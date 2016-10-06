@@ -1,19 +1,22 @@
 package httpserver.routing;
 
-import httpserver.httpmessages.HTTPRequest;
-import httpserver.httpmessages.HTTPResponse;
-import httpserver.httpmessages.StatusCode;
+import httpserver.httprequests.HTTPRequest;
+import httpserver.httpresponse.HTTPResponse;
+
+import static httpserver.httpresponse.StatusCode.OK;
 
 public class TeaRoute extends Route {
 
-    public TeaRoute(String uri, Method...methods) {
-        super(uri, methods);
+    private static final String URI = "/tea";
+
+    public TeaRoute(Method... methods) {
+        super(URI, methods);
     }
 
     @Override
     public HTTPResponse performAction(HTTPRequest httpRequest) {
         if (super.methodIsAllowed(httpRequest.getMethod())) {
-            return new HTTPResponse(StatusCode.OK.code, StatusCode.OK.reason);
+            return HTTPResponse.create(OK);
         }
         return super.methodNotAllowed();
     }

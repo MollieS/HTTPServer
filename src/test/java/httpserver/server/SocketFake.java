@@ -1,8 +1,8 @@
 package httpserver.server;
 
 import httpserver.ClientSocket;
-import httpserver.httpmessages.HTTPRequest;
-import httpserver.httpmessages.HTTPResponse;
+import httpserver.httprequests.HTTPRequest;
+import httpserver.httpresponse.HTTPResponse;
 
 import static httpserver.routing.Method.GET;
 

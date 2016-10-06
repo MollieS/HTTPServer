@@ -15,7 +15,7 @@ public class ResourceTest {
     public void knowsIfItExists() {
         File file = new File("/does/not/exist/");
 
-        Resource resource = new Resource(file);
+        FileResource resource = new FileResource(file);
 
         assertFalse(resource.exists());
     }
@@ -24,7 +24,7 @@ public class ResourceTest {
     public void hasAContentTypeForATextFile() {
         File file = new File(path + "/file1");
 
-        Resource resource = new Resource(file);
+        FileResource resource = new FileResource(file);
 
         assertEquals("text/plain", resource.getContentType());
     }
@@ -33,7 +33,7 @@ public class ResourceTest {
     public void hasAContentTypeForAJPEGFile() {
         File file = new File(path + "image.jpeg");
 
-        Resource resource = new Resource(file);
+        FileResource resource = new FileResource(file);
 
         assertEquals("image/jpeg", resource.getContentType());
     }
@@ -42,7 +42,7 @@ public class ResourceTest {
     public void hasAContentTypeForAPNGFile() {
         File file = new File(path + "image.png");
 
-        Resource resource = new Resource(file);
+        FileResource resource = new FileResource(file);
 
         assertEquals("image/png", resource.getContentType());
     }
@@ -51,8 +51,17 @@ public class ResourceTest {
     public void hasAContentTypeForAGIF() {
         File file = new File(path + "image.gif");
 
-        Resource resource = new Resource(file);
+        FileResource resource = new FileResource(file);
 
         assertEquals("image/gif", resource.getContentType());
+    }
+
+    @Test
+    public void hasCorrectContentTypeForDirectory() {
+        File file = new File(path);
+
+        FileResource resource = new FileResource(file);
+
+        assertEquals("text/html", resource.getContentType());
     }
 }

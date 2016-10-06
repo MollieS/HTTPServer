@@ -1,7 +1,7 @@
 package httpserver.routing;
 
-import httpserver.httpmessages.HTTPRequest;
-import httpserver.httpmessages.HTTPResponse;
+import httpserver.httprequests.HTTPRequest;
+import httpserver.httpresponse.HTTPResponse;
 import org.junit.Test;
 
 import static httpserver.routing.Method.GET;
@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 
 public class TeaRouteTest {
 
-    private TeaRoute teaRoute = new TeaRoute("/tea", GET);
+    private TeaRoute teaRoute = new TeaRoute(GET);
 
     @Test
     public void sendsA200ReponseForAGet() {

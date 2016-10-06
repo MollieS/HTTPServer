@@ -3,8 +3,8 @@ package httpserver.server;
 import httpserver.ClientSocket;
 import httpserver.SocketConnectionException;
 import httpserver.SocketServer;
-import httpserver.httpmessages.HTTPRequestParser;
-import httpserver.httpmessages.HTTPResponseWriter;
+import httpserver.httprequests.HTTPRequestParser;
+import httpserver.httpresponse.HTTPResponseWriter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

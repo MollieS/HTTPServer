@@ -1,15 +1,17 @@
 package httpserver.resourcemanagement;
 
+import httpserver.Resource;
+
 import java.io.File;
 
 import static httpserver.resourcemanagement.ResourceContentType.TEXT;
 
-public class Resource {
+public class FileResource implements Resource {
 
     private final File file;
     private byte[] contents;
 
-    public Resource(File file) {
+    public FileResource(File file) {
         this.file = file;
     }
 
@@ -31,10 +33,13 @@ public class Resource {
 
     public String getContentType() {
         for (ResourceContentType type : ResourceContentType.values()) {
-            if (file.getName().contains(type.extension)) {
-                return type.contentType;
-            }
+            if (fileHasType(type)) return type.contentType;
         }
+        if (file.isDirectory()) return "text/html";
         return TEXT.contentType;
+    }
+
+    private boolean fileHasType(ResourceContentType type) {
+        return file.getName().contains(type.extension);
     }
 }

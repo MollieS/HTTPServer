@@ -1,7 +1,7 @@
 package httpserver.routing;
 
-import httpserver.httpmessages.HTTPRequest;
-import httpserver.httpmessages.HTTPResponse;
+import httpserver.httprequests.HTTPRequest;
+import httpserver.httpresponse.HTTPResponse;
 import org.junit.Test;
 
 import static httpserver.routing.Method.*;
@@ -10,7 +10,7 @@ import static org.junit.Assert.assertTrue;
 
 public class MethodOptionsRouteTest {
 
-    private MethodOptionsRoute methodOptionsRoute = new MethodOptionsRoute("/method_options", GET, PUT, POST, HEAD, OPTIONS);
+    private MethodOptionsRoute methodOptionsRoute = new MethodOptionsRoute(GET, PUT, POST, HEAD, OPTIONS);
 
     @Test
     public void returnsA200ResponseForAGetRequest() {
@@ -47,11 +47,10 @@ public class MethodOptionsRouteTest {
 
         HTTPResponse httpResponse = methodOptionsRoute.performAction(httpRequest);
 
-        assertTrue(httpResponse.allowedMethods().contains(GET));
-        assertTrue(httpResponse.allowedMethods().contains(PUT));
-        assertTrue(httpResponse.allowedMethods().contains(POST));
-        assertTrue(httpResponse.allowedMethods().contains(HEAD));
-        assertTrue(httpResponse.allowedMethods().contains(OPTIONS));
+        assertTrue(httpResponse.getAllowedMethods().contains(GET));
+        assertTrue(httpResponse.getAllowedMethods().contains(PUT));
+        assertTrue(httpResponse.getAllowedMethods().contains(POST));
+        assertTrue(httpResponse.getAllowedMethods().contains(HEAD));
+        assertTrue(httpResponse.getAllowedMethods().contains(OPTIONS));
     }
-
 }

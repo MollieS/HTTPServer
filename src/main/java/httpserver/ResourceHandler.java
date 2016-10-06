@@ -1,10 +1,10 @@
 package httpserver;
 
-import httpserver.resourcemanagement.Resource;
+import httpserver.resourcemanagement.FileResource;
 
 import java.net.URI;
 
 public interface ResourceHandler {
 
-    Resource getResource(URI path);
+    FileResource getResource(URI path);
 }

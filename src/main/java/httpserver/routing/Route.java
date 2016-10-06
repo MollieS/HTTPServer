@@ -1,14 +1,14 @@
 package httpserver.routing;
 
-import httpserver.httpmessages.HTTPRequest;
-import httpserver.httpmessages.HTTPResponse;
+import httpserver.httprequests.HTTPRequest;
+import httpserver.httpresponse.HTTPResponse;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static httpserver.httpmessages.StatusCode.NOTALLOWED;
+import static httpserver.httpresponse.StatusCode.NOTALLOWED;
 
 public abstract class Route {
 
@@ -36,6 +36,6 @@ public abstract class Route {
     }
 
     public HTTPResponse methodNotAllowed() {
-        return new HTTPResponse(NOTALLOWED.code, NOTALLOWED.reason);
+        return HTTPResponse.create(NOTALLOWED);
     }
 }

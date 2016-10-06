@@ -1,32 +1,33 @@
 package httpserver.server;
 
 import httpserver.SocketConnectionException;
-import httpserver.httpmessages.HTTPRequest;
-import httpserver.httpmessages.HTTPRequestParser;
-import httpserver.httpmessages.HTTPResponse;
-import httpserver.httpmessages.HTTPResponseWriter;
+import httpserver.httprequests.HTTPRequest;
+import httpserver.httprequests.HTTPRequestParser;
+import httpserver.httpresponse.HTTPResponse;
+import httpserver.httpresponse.HTTPResponseWriter;
 import org.junit.Test;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Arrays;
 
+import static httpserver.httpresponse.StatusCode.OK;
 import static httpserver.routing.Method.GET;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class HTTPSocketTest {
 
-    private final SocketSpy socketSpy = new SocketSpy();
+    private final SocketFake socketFake = new SocketFake();
     private final SocketThatThrowsException socketThatThrowsException = new SocketThatThrowsException();
+    private HTTPResponse OkResponse = HTTPResponse.create(OK);
 
     @Test
     public void closesTheSocket() {
-        HTTPSocket httpSocket = createSocket(socketSpy);
+        HTTPSocket httpSocket = createSocket(socketFake);
 
         httpSocket.close();
 
-        assertTrue(socketSpy.isClosed);
+        assertTrue(socketFake.isClosed);
     }
 
     @Test(expected = SocketConnectionException.class)
@@ -38,42 +39,42 @@ public class HTTPSocketTest {
 
     @Test
     public void getsTheOutputStreamFromTheSocket() {
-        HTTPSocket httpSocket = createSocket(socketSpy);
+        HTTPSocket httpSocket = createSocket(socketFake);
 
-        httpSocket.sendResponse(new HTTPResponse(200, "OK"));
+        httpSocket.sendResponse(OkResponse);
 
-        assertTrue(socketSpy.getOutputStreamHasBeenCalled);
+        assertTrue(socketFake.getOutputStreamHasBeenCalled);
     }
 
     @Test
     public void writesTheHTTPResponseToTheSocketOutputStream() {
-        HTTPSocket httpSocket = createSocket(socketSpy);
+        HTTPSocket httpSocket = createSocket(socketFake);
 
-        httpSocket.sendResponse(new HTTPResponse(200, "OK"));
-        OutputStream outputStream = socketSpy.getOutputStream();
+        httpSocket.sendResponse(OkResponse);
+        OutputStream outputStream = socketFake.getOutputStream();
 
-        assertEquals("HTTP/1.1 200 OK\n", outputStream.toString());
+        assertTrue(outputStream.toString().contains("HTTP/1.1 200 OK\n"));
     }
 
     @Test(expected = SocketConnectionException.class)
     public void throwsASocketConnectionExceptionIfOutputStreamCannotBeRetrieved() {
         HTTPSocket httpSocket = createSocket(socketThatThrowsException);
 
-        httpSocket.sendResponse(new HTTPResponse(200, "OK"));
+        httpSocket.sendResponse(OkResponse);
     }
 
     @Test
     public void getsTheInputStreamFromTheSocket() {
-        HTTPSocket httpSocket = createSocket(socketSpy);
+        HTTPSocket httpSocket = createSocket(socketFake);
 
         httpSocket.getRequest();
 
-        assertTrue(socketSpy.getInputStreamHasBeenCalled);
+        assertTrue(socketFake.getInputStreamHasBeenCalled);
     }
 
     @Test
     public void getsTheRequestFromInputStream() {
-        HTTPSocket httpSocket = createSocket(socketSpy);
+        HTTPSocket httpSocket = createSocket(socketFake);
 
         HTTPRequest request = httpSocket.getRequest();
 
@@ -87,25 +88,11 @@ public class HTTPSocketTest {
         httpSocket.getRequest();
     }
 
-    @Test
-    public void sendsTheBodyOfTheResponseIfThereIsBody() {
-        HTTPResponse httpResponse = new HTTPResponse(200, "OK");
-        httpResponse.setBody("This is the body".getBytes());
-        httpResponse.setAllowedMethods(Arrays.asList(GET));
-        HTTPSocket httpSocket = createSocket(socketSpy);
-
-        httpSocket.sendResponse(httpResponse);
-        OutputStream outputStream = socketSpy.getOutputStream();
-
-        assertTrue(outputStream.toString().contains("This is the body"));
-    }
-
     private HTTPSocket createSocket(Socket socket) {
         return new HTTPSocket(socket, new HTTPResponseWriter(new ByteArrayOutputStream()), new HTTPRequestParser());
     }
 
-
-    private class SocketSpy extends Socket {
+    private class SocketFake extends Socket {
 
         boolean isClosed = false;
         boolean getOutputStreamHasBeenCalled = false;

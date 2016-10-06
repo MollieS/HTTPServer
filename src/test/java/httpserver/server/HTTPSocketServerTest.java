@@ -9,7 +9,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
 
 public class HTTPSocketServerTest {
 
@@ -30,7 +30,7 @@ public class HTTPSocketServerTest {
 
         ClientSocket socket = httpSocketServer.serve();
 
-        assertTrue(socket != null);
+        assertNotNull(socket);
     }
 
     @Test(expected = SocketConnectionException.class)

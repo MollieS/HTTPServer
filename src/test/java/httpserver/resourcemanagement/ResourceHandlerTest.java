@@ -15,14 +15,14 @@ public class ResourceHandlerTest {
 
     @Test
     public void returnsADirectoryResource() {
-        Resource resource = resourceHandler.getResource(URI.create("/"));
+        FileResource resource = resourceHandler.getResource(URI.create("/"));
 
         assertTrue(resource.isADirectory());
     }
 
     @Test
     public void returnsAResourceThatContainsDirectoryContent() {
-        Resource resource = resourceHandler.getResource(URI.create("/"));
+        FileResource resource = resourceHandler.getResource(URI.create("/"));
 
         String body = new String(resource.getContents(), Charset.forName("UTF-8"));
 
@@ -31,7 +31,7 @@ public class ResourceHandlerTest {
 
     @Test
     public void returnsANonExistentResourceForAFileThatDoesNotExist() {
-        Resource resource = resourceHandler.getResource(URI.create("/foobar"));
+        FileResource resource = resourceHandler.getResource(URI.create("/foobar"));
 
         assertFalse(resource.exists());
     }

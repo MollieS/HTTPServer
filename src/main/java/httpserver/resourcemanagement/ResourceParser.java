@@ -28,7 +28,7 @@ public class ResourceParser {
     private byte[] returnFiles(File directory) {
         String files = "";
         for (File fileEntry : directory.listFiles()) {
-            files += fileEntry.getName() + "\n";
+            files += "<a href=/" + fileEntry.getName() + ">" + fileEntry.getName() + "</a>" + "\n";
         }
         return files.getBytes();
     }

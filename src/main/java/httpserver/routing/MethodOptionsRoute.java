@@ -1,23 +1,23 @@
 package httpserver.routing;
 
-import httpserver.httpmessages.HTTPRequest;
-import httpserver.httpmessages.HTTPResponse;
+import httpserver.httprequests.HTTPRequest;
+import httpserver.httpresponse.HTTPResponse;
 
-import static httpserver.httpmessages.StatusCode.OK;
+import static httpserver.httpresponse.StatusCode.OK;
 
 public class MethodOptionsRoute extends Route {
 
-    public MethodOptionsRoute(String uri, Method... methods) {
-        super(uri, methods);
+    public MethodOptionsRoute(Method... methods) {
+        super("/method_options", methods);
     }
 
     @Override
     public HTTPResponse performAction(HTTPRequest httpRequest) {
         HTTPResponse httpResponse;
         if (methodIsAllowed(httpRequest.getMethod())) {
-            httpResponse = new HTTPResponse(OK.code, OK.reason);
+            httpResponse = HTTPResponse.create(OK);
             if (httpRequest.getMethod() == Method.OPTIONS) {
-                httpResponse.setAllowedMethods(super.getAllowedMethods());
+                httpResponse.withAllowedMethods(super.getAllowedMethods());
             }
             return httpResponse;
         }

@@ -1,4 +1,4 @@
-package httpserver.httpmessages;
+package httpserver.httpresponse;
 
 public class ResponseWriterException extends RuntimeException {
 

@@ -1,7 +1,9 @@
 package httpserver.routing;
 
-import httpserver.httpmessages.HTTPRequest;
-import httpserver.httpmessages.HTTPResponse;
+import httpserver.Resource;
+import httpserver.httprequests.HTTPRequest;
+import httpserver.httpresponse.HTTPResponse;
+import httpserver.resourcemanagement.HTTPResource;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,15 +11,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static httpserver.httpmessages.StatusCode.OK;
+import static httpserver.httpresponse.StatusCode.OK;
 
 public class FormRoute extends Route {
 
     private final String path;
     private final File file;
 
-    public FormRoute(String uri, String path, Method... methods) {
-        super(uri, methods);
+    public FormRoute(String path, Method... methods) {
+        super("/form", methods);
         this.path = path;
         this.file = new File(path);
     }
@@ -28,23 +30,32 @@ public class FormRoute extends Route {
             try {
                 return getHttpResponse(httpRequest);
             } catch (IOException e) {
-                throw new FormManagerException("Cannot access form data: ", e);
+                createForm();
             }
         }
         return methodNotAllowed();
     }
 
+    private void createForm() {
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            throw new FormManagerException(e);
+        }
+    }
+
     private HTTPResponse getHttpResponse(HTTPRequest httpRequest) throws IOException {
-        HTTPResponse httpResponse = new HTTPResponse(OK.code, OK.reason);
+        HTTPResponse httpResponse = HTTPResponse.create(OK);
         switch (httpRequest.getMethod()) {
             case POST:
                 writeToFile(httpRequest);
+                break;
             case PUT:
                 writeToFile(httpRequest);
                 break;
             case GET:
-                httpResponse.setContentType("text/html");
-                httpResponse.setBody(readFromFile());
+                Resource resource = new HTTPResource(readFromFile());
+                httpResponse.withBody(resource);
                 break;
             case DELETE:
                 deleteFileContents();

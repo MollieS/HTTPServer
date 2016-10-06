@@ -15,9 +15,9 @@ public class HTTPResourceHandler implements ResourceHandler {
         this.resourceParser = resourceParser;
     }
 
-    public Resource getResource(URI path) {
+    public FileResource getResource(URI path) {
         File file = new File(filepath + path);
-        Resource resource = new Resource(file);
+        FileResource resource = new FileResource(file);
         if (resource.exists()) {
             resource.setContents(resourceParser.parse(file));
         }
